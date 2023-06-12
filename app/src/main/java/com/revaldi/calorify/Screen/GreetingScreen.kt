@@ -4,15 +4,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Text
-import androidx.compose.ui.draw.clip
+import androidx.compose.material.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -65,25 +61,24 @@ fun GreetingPage(navController: NavHostController) {
                 ),
             )
             Text(
-                text = "Personalize Your Body Condition Based on Your Goals",
+                text = "Control your calory just with your phone",
                 color = Color.Black,
                 textAlign = TextAlign.Center,
                 style = TextStyle(fontSize = 18.sp),
                 modifier = Modifier.width(298.dp)
             )
-            Spacer(modifier = Modifier.height(70.dp))
+            Spacer(modifier = Modifier.height(80.dp))
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(100.dp),
-            contentAlignment = Alignment.BottomEnd
+            contentAlignment = Alignment.Center,
             ) {
                 Button(
-                    onClick = { navController.navigate(Screen.GenderPersonalization.route) },
+                    onClick = { navController.navigate(BotNav.Homepage.route) },
                     shape = RoundedCornerShape(40.dp),
                     colors = ButtonDefaults.buttonColors(Color.White),
-                    modifier = Modifier.padding(vertical = 15.dp, horizontal = 50.dp).align(
-                        Alignment.BottomEnd)
+                    modifier = Modifier.width(300.dp).height(54.dp)
                 ) {
                     Text(
                         text = "Start",
@@ -102,4 +97,5 @@ fun GreetingPage(navController: NavHostController) {
 @Composable
 fun GreetingPagePreview() {
     GreetingPage(navController = NavHostController(LocalContext.current))
+
 }

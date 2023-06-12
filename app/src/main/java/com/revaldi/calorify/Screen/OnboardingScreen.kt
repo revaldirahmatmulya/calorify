@@ -128,9 +128,7 @@ fun FinishButton(
                     backgroundColor =
                     Color.White,
                 ),
-                modifier = Modifier
-                    .padding(horizontal = 80.dp,
-                        vertical = 15.dp)
+                modifier = Modifier.width(300.dp).height(54.dp)
             ) {
                 Text(
                     text = "Get Started",

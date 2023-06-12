@@ -5,13 +5,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material3.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
@@ -26,10 +24,9 @@ import com.revaldi.calorify.Navigation.Screen
 import com.revaldi.calorify.R
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import com.revaldi.calorify.Data.OnBoardingPage.First.image
+import com.revaldi.calorify.Data.UserViewModel
 
 object gender {
     const val male = "Male"
@@ -37,12 +34,12 @@ object gender {
 }
 
 @Composable
-fun GenderPersonalization(navController: NavHostController) {
+fun GenderPersonalization(navController: NavHostController,viewModel: UserViewModel) {
 
     var selectedOption by remember { mutableStateOf("") }
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().background(Color.White),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -86,22 +83,42 @@ fun GenderPersonalization(navController: NavHostController) {
             )
         }
         Spacer(modifier = Modifier.height(131.dp))
-        Button(
-            onClick = {  navController.navigate(Screen.ActivityPersonalization.route)},
-            shape = RoundedCornerShape(40.dp),
-            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF6F7CFC)),
+        Row(
             modifier = Modifier
-                .padding(horizontal = 50.dp, vertical = 15.dp)
+                .fillMaxWidth()
+                .padding(start = 24.dp, end = 24.dp),
+
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                text = "Next",
-                color = Color.White,
-                style = TextStyle(
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Black
+            Button(
+                onClick = {  navController.navigate(Screen.UsernamePersonalization.route) },
+                shape = RoundedCornerShape(40.dp),
+                colors = ButtonDefaults.buttonColors( Color(0xff6e7bfb)),
+                modifier = Modifier.width(144.dp).height(54.dp)
+            ) {
+                Text(
+                    text = "Back",
+                    color = Color.White,
+                    style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Black)
                 )
-            )
+            }
+
+            Button(
+                onClick = {
+                    viewModel.gender.value=selectedOption
+                    navController.navigate(Screen.HeightWeightPersonalization.route) },
+                shape = RoundedCornerShape(40.dp),
+                colors = ButtonDefaults.buttonColors( Color(0xff6f7cfc)),
+                modifier = Modifier.width(144.dp).height(54.dp)
+            ) {
+                Text(
+                    text = "Next",
+                    color = Color.White,
+                    style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Black)
+                )
+            }
         }
+
     }
 }
 
@@ -117,11 +134,13 @@ fun CustomRadioButton(
     Card(
         modifier = modifier
             .clickable { onSelected() }
-            .background(if (isSelected) Color(0xFF6E7BFB) else Color.White)
+            .border( if (isSelected) 2.dp else 0.dp, Color(0xFF6E7BFB), RoundedCornerShape(15.dp))
             .height(400.dp)
-            .width(150.dp),
+            .width(150.dp)
+            .fillMaxSize(),
+        backgroundColor = Color.White,
         elevation = if (isSelected) 4.dp else 2.dp,
-        shape = RoundedCornerShape(8.dp)
+        shape = RoundedCornerShape(15.dp)
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
@@ -131,12 +150,12 @@ fun CustomRadioButton(
             Image(
                 painter = painterResource(id),
                 contentDescription = "Radio Button",
-                colorFilter = if (isSelected) ColorFilter.tint(Color.White) else ColorFilter.tint(Color(0xFF6E7BFB)),
+                colorFilter = if (isSelected) ColorFilter.tint(Color(0xFF6E7BFB)) else ColorFilter.tint(Color(0xFFC5CAFD)),
                 modifier = Modifier.size(240.dp)
             )
             Text(
                 text = text,
-                color = if (isSelected) Color.White else Color(0xFF3B3B3B),
+                color =  Color(0xFF3B3B3B),
                 textAlign = TextAlign.Center,
                 style = TextStyle(
                     fontSize = 18.sp,
@@ -150,6 +169,6 @@ fun CustomRadioButton(
 @Preview
 @Composable
 fun GetGenderPreview() {
-    GenderPersonalization(navController = NavHostController(LocalContext.current))
+    GenderPersonalization(navController = NavHostController(LocalContext.current),viewModel = UserViewModel())
 }
 

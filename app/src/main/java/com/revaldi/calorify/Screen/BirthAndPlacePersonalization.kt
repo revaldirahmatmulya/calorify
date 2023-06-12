@@ -1,9 +1,11 @@
 package com.revaldi.calorify.Screen
 
+import android.app.DatePickerDialog
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,25 +22,45 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.revaldi.calorify.R
+import android.widget.DatePicker
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.ui.platform.LocalContext
+import com.revaldi.calorify.Data.UserViewModel
+import com.revaldi.calorify.Navigation.Screen
+import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.datetime.date.datepicker
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
+import java.util.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 
 
 @Composable
-fun BirthAndPlacePersonalization(navController: NavHostController) {
-    var dateOfBirth by remember { mutableStateOf("28/10/2001") }
-    var country by remember { mutableStateOf("Indonesia") }
-    var showDatePicker by remember { mutableStateOf(false) }
+fun BirthAndPlacePersonalization(navController: NavHostController,viewModel: UserViewModel){
+
+    var selectedDate by remember { mutableStateOf("") }
+    var selectedIndex by remember { mutableStateOf(-1) }
+    var country by remember { mutableStateOf("") }
     var showDropdown by remember { mutableStateOf(false) }
     val countries = listOf("Indonesia", "United States", "United Kingdom", "Canada", "Australia")
+    var age by remember { mutableStateOf(0) }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .width(390.dp)
-            .padding(start = 8.dp, end = 7.dp, top = 12.dp, bottom = 30.dp)
+            .fillMaxSize()
+            .background(color = Color.White),
+
     ) {
         Spacer(modifier = Modifier.height(77.dp))
         Text(
@@ -56,48 +78,16 @@ fun BirthAndPlacePersonalization(navController: NavHostController) {
             modifier = Modifier.width(298.dp)
         )
         Spacer(modifier = Modifier.height(45.dp))
-        Button(
-            onClick = { showDatePicker = true },
-            modifier = Modifier
-                .width(342.dp)
-                .height(75.dp)
-                .clip(shape = RoundedCornerShape(15.dp))
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(51.dp)
-                    .background(color = Color(0xfff2f3ff))
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_android),
-                    contentDescription = "Outline/General/Calendar",
-                    tint = Color(0xff6f7cfc),
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            }
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.Start
-            ) {
-                Text(
-                    text = "Date",
-                    color = Color.Black,
-                    style = TextStyle(fontSize = 14.sp)
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = dateOfBirth,
-                    color = Color.Black,
-                    style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium)
-                )
-            }
-            Icon(
-                painter = painterResource(id = R.drawable.ic_android),
-                contentDescription = "Outline/Interface/Caret down",
-                tint = Color.Black,
-                modifier = Modifier.align(Alignment.CenterVertically)
-            )
+
+
+        showDatePickerDialog { date,ageNow ->
+            selectedDate = date
+            age = ageNow
         }
+
+        // Display selected date
+        Spacer(modifier = Modifier.height(12.dp))
+        Row(modifier = Modifier.align(Alignment.Start)) { Text(selectedDate) }
         Spacer(modifier = Modifier.height(71.dp))
         Text(
             text = "Where do you live?",
@@ -106,58 +96,27 @@ fun BirthAndPlacePersonalization(navController: NavHostController) {
             style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Black)
         )
         Spacer(modifier = Modifier.height(21.dp))
-        Button(
-            onClick = { showDropdown = true },
-            modifier = Modifier
-                .width(342.dp)
-                .height(75.dp)
-                .clip(shape = RoundedCornerShape(15.dp))
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(51.dp)
-                    .background(color = Color(0xfff2f3ff))
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_android),
-                    contentDescription = "Outline/Navigation/Location",
-                    tint = Color(0xff6f7cfc),
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            }
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.Start
-            ) {
-                Text(
-                    text = "Country",
-                    color = Color.Black,
-                    style = TextStyle(fontSize = 14.sp)
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = country,
-                    color = Color.Black,
-                    style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium)
-                )
-            }
-            Icon(
-                painter = painterResource(id = R.drawable.ic_android),
-                contentDescription = "Outline/Interface/Caret down",
-                tint = Color.Black,
-                modifier = Modifier.align(Alignment.CenterVertically)
-            )
-        }
-        Spacer(modifier = Modifier.height(304.dp))
+        LargeDropdownMenu(
+            label = "Select Country",
+            items = countries,
+            selectedIndex = selectedIndex,
+            onItemSelected = { index, _ -> selectedIndex = index },
+        )
+        Spacer(modifier = Modifier.height(250.dp))
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Button(
-                onClick = { /* Handle back button click here */ },
+                onClick = { navController.navigate(Screen.HeightWeightPersonalization.route) },
                 shape = RoundedCornerShape(40.dp),
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xff6e7bfb)),
-                modifier = Modifier.padding(horizontal = 50.dp, vertical = 15.dp)
+                modifier = Modifier
+                    .width(144.dp)
+                    .height(54.dp)
+
             ) {
                 Text(
                     text = "Back",
@@ -167,10 +126,16 @@ fun BirthAndPlacePersonalization(navController: NavHostController) {
             }
 
             Button(
-                onClick = { /* Handle next button click here */ },
+                onClick = {
+                    viewModel.birthday.value = selectedDate
+                    viewModel.age.value = age.toString()
+                    viewModel.nation.value = countries[selectedIndex]
+                    navController.navigate(Screen.ActivityPersonalization.route) },
                 shape = RoundedCornerShape(40.dp),
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xff6f7cfc)),
-                modifier = Modifier.padding(horizontal = 50.dp, vertical = 15.dp)
+                modifier = Modifier
+                    .width(144.dp)
+                    .height(54.dp)
             ) {
                 Text(
                     text = "Next",
@@ -181,7 +146,42 @@ fun BirthAndPlacePersonalization(navController: NavHostController) {
         }
     }
 }
+@Composable
+fun showDatePickerDialog(onDateSelected: (String,Int) -> Unit) {
+    val dialogState = rememberMaterialDialogState()
+    val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.getDefault())
+    var myDate by remember { mutableStateOf("") }
+    MaterialDialog(
+        dialogState = dialogState,
+        buttons = {
+            positiveButton("Ok")
+            negativeButton("Cancel")
+        }
+    ) {
+        datepicker { date ->
+            val formattedDate = dateFormatter.format(date)
+            onDateSelected(formattedDate, calculateAge(date))
+            myDate = formattedDate
+        }
+    }
 
+    Button(
+        modifier = Modifier.width(340.dp).height(75.dp).border(0.5.dp, Color.Black, RoundedCornerShape(10.dp)),
+        onClick = {
+            dialogState.show()
+        },
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
+    ) {
+        Text(if(myDate == "") "Select Date" else myDate, fontSize = 20.sp, textAlign = TextAlign.Center)
+    }
+
+
+}
+fun calculateAge(date: LocalDate): Int {
+    val currentDate = LocalDate.now()
+    val years = ChronoUnit.YEARS.between(date, currentDate)
+    return years.toInt()
+}
 
 @Composable
 fun <T> LargeDropdownMenu(
@@ -203,19 +203,25 @@ fun <T> LargeDropdownMenu(
     },
 ) {
     var expanded by remember { mutableStateOf(false) }
-    Box(modifier = modifier.height(IntrinsicSize.Min)) {
+
+    Box(
+        modifier = modifier.height(IntrinsicSize.Min),
+        contentAlignment = Alignment.Center
+
+        ) {
         OutlinedTextField(
             label = { Text(label) },
             value = items.getOrNull(selectedIndex)?.let { selectedItemToString(it) } ?: "",
             enabled = enabled,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.width(340.dp).height(75.dp),
             trailingIcon = {
-                val icon = if (expanded) Icons.Filled.ArrowDropDown else Icons.Filled.ArrowDropDown
+                val icon = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.ArrowDropDown
                 Icon(icon, contentDescription = null)
             },
             onValueChange = { },
             readOnly = true,
         )
+
         // Transparent clickable surface on top of OutlinedTextField
         Surface(
             modifier = Modifier
@@ -226,11 +232,11 @@ fun <T> LargeDropdownMenu(
             color = Color.Transparent,
         ) {}
     }
+
     if (expanded) {
         Dialog(
             onDismissRequest = { expanded = false },
         ) {
-            MyTheme {
                 Surface(
                     shape = RoundedCornerShape(12.dp),
                 ) {
@@ -240,6 +246,7 @@ fun <T> LargeDropdownMenu(
                             listState.scrollToItem(index = selectedIndex)
                         }
                     }
+
                     LazyColumn(modifier = Modifier.fillMaxWidth(), state = listState) {
                         if (notSetLabel != null) {
                             item {
@@ -261,13 +268,14 @@ fun <T> LargeDropdownMenu(
                                 onItemSelected(index, item)
                                 expanded = false
                             }
+
                             if (index < items.lastIndex) {
                                 Divider(modifier = Modifier.padding(horizontal = 16.dp))
                             }
                         }
                     }
                 }
-            }
+
         }
     }
 }
@@ -281,35 +289,30 @@ fun LargeDropdownMenuItem(
 ) {
     val contentColor = when {
         !enabled -> MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.disabled)
-        selected -> MaterialTheme.colors.primary
-        else -> MaterialTheme.colors.onSurface
+        selected -> MaterialTheme.colors.primary.copy(alpha = ContentAlpha.high)
+        else -> MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.high)
     }
+
     CompositionLocalProvider(LocalContentColor provides contentColor) {
-        Box(
-            modifier = Modifier
-                .clickable(enabled = enabled) { onClick() }
-                .fillMaxWidth()
-                .padding(vertical = 16.dp, horizontal = 16.dp)
-        ) {
+        Box(modifier = Modifier
+            .clickable(enabled) { onClick() }
+            .fillMaxWidth()
+            .padding(16.dp)) {
             Text(
                 text = text,
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.subtitle1,
             )
         }
     }
 }
 
+
+
+@Preview
 @Composable
-fun MyTheme(content: @Composable () -> Unit) {
-    MaterialTheme(
-        colors = lightColors(
-            primary = Color(0xff6f7cfc),
-            onPrimary = Color.White,
-            surface = Color.White,
-            onSurface = Color(0xff3b3b3b)
-        ),
-        typography = MaterialTheme.typography,
-        shapes = MaterialTheme.shapes,
-        content = content
-    )
+fun BirthAndPlacePersonalizationPreview() {
+    BirthAndPlacePersonalization(navController = rememberNavController(), viewModel = UserViewModel())
 }
+
+
+

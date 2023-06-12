@@ -1,15 +1,15 @@
 package com.revaldi.calorify.Screen
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
@@ -21,16 +21,19 @@ import androidx.navigation.NavHostController
 import com.revaldi.calorify.Navigation.Screen
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
+import com.revaldi.calorify.Data.UserViewModel
 
 @Composable
-fun ActivityPersonalization(navController: NavHostController) {
+fun ActivityPersonalization(navController: NavHostController,viewModel: UserViewModel) {
     var selectedOption by remember { mutableStateOf("") }
+
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .width(width = 390.dp)
-            .padding(start = 8.dp, end = 7.dp, top = 12.dp, bottom = 30.dp)
+            .fillMaxSize().background(Color.White)
     ) {
         Spacer(modifier = Modifier.height(height = 77.dp))
         Text(
@@ -50,50 +53,52 @@ fun ActivityPersonalization(navController: NavHostController) {
         Spacer(modifier = Modifier.height(height = 61.dp))
 
         RadioButtonCard(
-            isSelected = selectedOption == "Not Very Active",
-            onClick = { selectedOption = "Not Very Active" },
+            isSelected = selectedOption == "level_1",
+            onClick = { selectedOption = "level_1" },
             label = "Not Very Active",
             description = "Lorem ipsum dolor sit amet consectetur."
         )
 
-        Spacer(modifier = Modifier.height(height = 44.dp))
+        Spacer(modifier = Modifier.height(height = 20.dp))
 
         RadioButtonCard(
-            isSelected = selectedOption == "Somewhat Active",
-            onClick = { selectedOption = "Somewhat Active" },
+            isSelected = selectedOption == "level_2",
+            onClick = { selectedOption = "level_2"},
             label = "Somewhat Active",
             description = "Lorem ipsum dolor sit amet consectetur."
         )
 
-        Spacer(modifier = Modifier.height(height = 44.dp))
+        Spacer(modifier = Modifier.height(height = 20.dp))
 
         RadioButtonCard(
-            isSelected = selectedOption == "Active",
-            onClick = { selectedOption = "Active" },
+            isSelected = selectedOption == "level_3",
+            onClick = { selectedOption = "level_3" },
             label = "Active",
             description = "Lorem ipsum dolor sit amet consectetur."
         )
 
-        Spacer(modifier = Modifier.height(height = 44.dp))
+        Spacer(modifier = Modifier.height(height = 20.dp))
 
         RadioButtonCard(
-            isSelected = selectedOption == "Very Active",
-            onClick = { selectedOption = "Very Active" },
+            isSelected = selectedOption == "level_4",
+            onClick = { selectedOption = "level_4" },
             label = "Very Active",
             description = "Lorem ipsum dolor sit amet consectetur."
         )
 
-        Spacer(modifier = Modifier.height(height = 91.dp))
+        Spacer(modifier = Modifier.height(height = 50.dp))
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Button(
-                onClick = { /* Handle back button click here */ },
+                onClick = {  navController.navigate(Screen.BirthAndPlacePersonalization.route) },
                 shape = RoundedCornerShape(40.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xff6e7bfb)),
-                modifier = Modifier.padding(horizontal = 50.dp, vertical = 15.dp)
+                colors = ButtonDefaults.buttonColors(Color(0xff6e7bfb)),
+                modifier = Modifier.width(144.dp).height(54.dp)
             ) {
                 Text(
                     text = "Back",
@@ -103,10 +108,13 @@ fun ActivityPersonalization(navController: NavHostController) {
             }
 
             Button(
-                onClick = {  navController.navigate(Screen.HeightPersonalization.route) },
+                onClick = {
+                            viewModel.activity.value = selectedOption
+                            viewModel.addUserData(navController)
+                          },
                 shape = RoundedCornerShape(40.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xff6f7cfc)),
-                modifier = Modifier.padding(horizontal = 50.dp, vertical = 15.dp)
+                colors = ButtonDefaults.buttonColors( Color(0xff6f7cfc)),
+                modifier = Modifier.width(144.dp).height(54.dp)
             ) {
                 Text(
                     text = "Next",
@@ -131,9 +139,12 @@ fun RadioButtonCard(
         modifier = Modifier
             .width(width = 342.dp)
             .height(height = 95.dp)
+            .background(if (isSelected) Color(0xff6f7cfc) else Color.White,
+                shape = RoundedCornerShape(10.dp))
+            .border(0.5.dp, Color.Black, RoundedCornerShape(10.dp))
             .clickable(onClick = onClick)
-            .background(if (isSelected) Color(0xff6f7cfc) else Color.White)
             .padding(16.dp)
+
     ) {
         Text(
             text = label,
@@ -147,4 +158,10 @@ fun RadioButtonCard(
             style = TextStyle(fontSize = 14.sp)
         )
     }
+}
+
+@Preview
+@Composable
+fun ActivityPersonalizationPreview() {
+    ActivityPersonalization(navController = NavHostController(LocalContext.current),viewModel = UserViewModel())
 }
