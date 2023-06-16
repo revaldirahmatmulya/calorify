@@ -1,4 +1,5 @@
 package com.revaldi.calorify.Screen
+import android.app.Application
 import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -104,8 +105,8 @@ fun HeightWeightPersonalization(navController: NavHostController,viewModel:UserV
 
             Button(
                 onClick = {
-                    viewModel.height.value = heightText
-                    viewModel.weight.value = weightText
+                    viewModel.height.value = heightText.toInt()
+                    viewModel.weight.value = weightText.toInt()
                     navController.navigate(Screen.BirthAndPlacePersonalization.route) },
                 shape = RoundedCornerShape(40.dp),
                 colors = ButtonDefaults.buttonColors( Color(0xff6f7cfc)),
@@ -139,7 +140,7 @@ fun RoundedTextField(
             .fillMaxWidth()
             .padding(vertical = 8.dp)
     )
-    androidx.compose.material.OutlinedTextField(
+    OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         modifier = modifier
@@ -162,9 +163,12 @@ fun RoundedTextField(
         }
     )
 }
+
 @Preview
 @Composable
 fun HeightWeightPersonalizationPreview() {
-    HeightWeightPersonalization(navController = NavHostController(LocalContext.current),viewModel = UserViewModel())
+    HeightWeightPersonalization(navController = NavHostController(LocalContext.current),viewModel = UserViewModel(
+        Application()
+    ))
 }
 

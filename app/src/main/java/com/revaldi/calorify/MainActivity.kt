@@ -7,6 +7,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.revaldi.calorify.Navigation.SetupNavGraph
+import com.revaldi.calorify.Network.RetrofitClient
 import com.revaldi.calorify.ui.Theme.Calorify
 
 @ExperimentalAnimationApi
@@ -16,6 +17,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             Calorify {
+
                 val navController = rememberNavController()
                 SetupNavGraph(navController = navController)
             }

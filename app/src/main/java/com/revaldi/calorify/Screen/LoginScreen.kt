@@ -1,5 +1,6 @@
 package com.revaldi.calorify.Screen
 
+import android.app.Application
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -99,7 +100,6 @@ fun Login(navController: NavHostController, viewModel: UserViewModel) {
                 Log.e("Login", email)
                 Log.e("Login", password)
                 viewModel.loginNow(email, password,navController)
-
             })
             Spacer(
                 modifier = Modifier
@@ -235,5 +235,7 @@ fun PasswordRoundedTextField(
 @Preview
 @Composable
 fun LoginPreview() {
-    Login(navController = NavHostController(LocalContext.current), viewModel = UserViewModel())
+    Login(navController = NavHostController(LocalContext.current), viewModel = UserViewModel(
+        Application()
+    ))
 }

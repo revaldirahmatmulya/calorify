@@ -1,4 +1,5 @@
 package com.revaldi.calorify.Screen
+import android.app.Application
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,8 +30,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.revaldi.calorify.Data.UserViewModel
 
 object gender {
-    const val male = "Male"
-    const val female = "Female"
+    const val male = "male"
+    const val female = "female"
 }
 
 @Composable
@@ -169,6 +170,8 @@ fun CustomRadioButton(
 @Preview
 @Composable
 fun GetGenderPreview() {
-    GenderPersonalization(navController = NavHostController(LocalContext.current),viewModel = UserViewModel())
+    GenderPersonalization(navController = NavHostController(LocalContext.current),viewModel = UserViewModel(
+        Application()
+    ))
 }
 

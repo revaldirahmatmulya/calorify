@@ -1,7 +1,6 @@
 package com.revaldi.calorify.Navigation
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
+
 
 sealed class Screen(val route: String) {
     object Splash : Screen(route="splash_screen")
@@ -17,6 +16,10 @@ sealed class Screen(val route: String) {
     object BirthAndPlacePersonalization : Screen(route = "birth_and_place_personalization_screen")
 
     object Home : Screen("home_screen")
-    object DetailNews : Screen("detail/{article}")
+    object DetailNews : Screen("detail_news_screen")
+    object Camera : Screen("camera_screen")
+    object Profile : Screen("profile_screen")
+    object FoodHistory : Screen("food_history_screen")
+    data class Result(val food:String) : Screen("result/${food}")
 
 }

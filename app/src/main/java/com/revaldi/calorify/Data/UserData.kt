@@ -10,7 +10,6 @@ data class UserData (
 val username : String,
 val nation : String,
 val birthday : String,
-val age : Int,
 val gender: String,
 val height: Int,
 val weight:Int,

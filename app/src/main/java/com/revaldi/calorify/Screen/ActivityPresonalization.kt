@@ -1,5 +1,6 @@
 package com.revaldi.calorify.Screen
-import android.util.Log
+import android.app.Application
+
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,7 +57,7 @@ fun ActivityPersonalization(navController: NavHostController,viewModel: UserView
             isSelected = selectedOption == "level_1",
             onClick = { selectedOption = "level_1" },
             label = "Not Very Active",
-            description = "Lorem ipsum dolor sit amet consectetur."
+            description = "Activities may include walking, light jogging, or recreational sports."
         )
 
         Spacer(modifier = Modifier.height(height = 20.dp))
@@ -65,7 +66,7 @@ fun ActivityPersonalization(navController: NavHostController,viewModel: UserView
             isSelected = selectedOption == "level_2",
             onClick = { selectedOption = "level_2"},
             label = "Somewhat Active",
-            description = "Lorem ipsum dolor sit amet consectetur."
+            description = "Activities may include brisk walking, running, swimming, cycling, or moderate-intensity workouts."
         )
 
         Spacer(modifier = Modifier.height(height = 20.dp))
@@ -74,7 +75,7 @@ fun ActivityPersonalization(navController: NavHostController,viewModel: UserView
             isSelected = selectedOption == "level_3",
             onClick = { selectedOption = "level_3" },
             label = "Active",
-            description = "Lorem ipsum dolor sit amet consectetur."
+            description = "Activities may include vigorous cardio workouts, weightlifting, high-intensity interval training (HIIT), or participating in competitive sports."
         )
 
         Spacer(modifier = Modifier.height(height = 20.dp))
@@ -83,7 +84,7 @@ fun ActivityPersonalization(navController: NavHostController,viewModel: UserView
             isSelected = selectedOption == "level_4",
             onClick = { selectedOption = "level_4" },
             label = "Very Active",
-            description = "Lorem ipsum dolor sit amet consectetur."
+            description = "They have a high activity level and may participate in multiple workouts or physical activities throughout the day."
         )
 
         Spacer(modifier = Modifier.height(height = 50.dp))
@@ -163,5 +164,7 @@ fun RadioButtonCard(
 @Preview
 @Composable
 fun ActivityPersonalizationPreview() {
-    ActivityPersonalization(navController = NavHostController(LocalContext.current),viewModel = UserViewModel())
+    ActivityPersonalization(navController = NavHostController(LocalContext.current),viewModel = UserViewModel(
+        Application()
+    ))
 }

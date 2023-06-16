@@ -1,5 +1,6 @@
 package com.revaldi.calorify.Screen
 
+import android.app.Application
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -23,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.revaldi.calorify.Data.UserViewModel
-import com.revaldi.calorify.Navigation.Screen
+
 import com.revaldi.calorify.R
 
 @Composable
@@ -143,5 +144,7 @@ fun RegisterButton(
 @Preview
 @Composable
 fun RegisterPreview() {
-    Register(navController = NavHostController(LocalContext.current),viewModel = UserViewModel())
+    Register(navController = NavHostController(LocalContext.current),viewModel = UserViewModel(
+        Application()
+    ))
 }

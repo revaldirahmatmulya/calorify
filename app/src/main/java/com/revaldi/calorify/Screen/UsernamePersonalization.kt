@@ -1,5 +1,6 @@
 package com.revaldi.calorify.Screen
 
+import android.app.Application
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,7 +28,7 @@ import com.revaldi.calorify.Data.UserViewModel
 fun UsernamePersonalization(navController: NavHostController,viewModel: UserViewModel) {
     var first by remember { mutableStateOf("") }
     var last by remember { mutableStateOf("") }
-    var fullname by remember { mutableStateOf(first+" "+last) }
+    var fullname by remember { mutableStateOf("") }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -73,6 +74,7 @@ fun UsernamePersonalization(navController: NavHostController,viewModel: UserView
 
             Button(
                 onClick = {
+                    fullname = first+" "+last
                     viewModel.username.value = fullname
                     navController.navigate(Screen.GenderPersonalization.route) },
                 shape = RoundedCornerShape(40.dp),
@@ -93,7 +95,9 @@ fun UsernamePersonalization(navController: NavHostController,viewModel: UserView
 @Preview
 @Composable
 fun PreviewUsernamePersonalization(){
-    UsernamePersonalization(navController = NavHostController(LocalContext.current),viewModel = UserViewModel())
+    UsernamePersonalization(navController = NavHostController(LocalContext.current),viewModel = UserViewModel(
+        Application()
+    ))
 }
 
 //make a new composable function for the text field with hint
